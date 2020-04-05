@@ -1,4 +1,5 @@
 import { AppError } from '../utils/AppError';
+import { Deck, IDeck } from './Deck';
 
 interface ICreateUserAPIResponse {
     code: number;
@@ -16,20 +17,25 @@ interface ILoginAPIResponse {
             createdDate: string;
             firstName: string;
             lastName: string;
-            decks: [];
+            decks: IDeck[];
         };
         token: string;
     };
 }
 
 export class User {
+    public decks: Deck[] = [];
     constructor(
         public id: string,
         public firstName: string,
         public lastName: string,
         public email: string,
-        public decks: unknown
-    ) {}
+        decks: IDeck[]
+    ) {
+        if (decks?.length) {
+            this.decks = decks.map((dk) => new Deck(dk.id, dk.title, dk.isPublic, dk.cards));
+        }
+    }
 
     private static get _apiBaseURI(): string {
         return process.env.REACT_APP_API_URI || '';
