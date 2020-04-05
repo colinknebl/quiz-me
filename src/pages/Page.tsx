@@ -6,6 +6,7 @@ import Avatar from '../components/Avatar';
 import { AppContext } from '../context/App.context';
 import Signup from '../components/Signup';
 import Login from '../components/Login';
+import Decks from '../components/Decks';
 import './Page.css';
 
 const Page: React.FC<RouteComponentProps<{ name: string }>> = (props) => {
@@ -13,8 +14,8 @@ const Page: React.FC<RouteComponentProps<{ name: string }>> = (props) => {
     const ctx = React.useContext(AppContext);
 
     switch (props.match.params.name) {
-        case 'home':
-            Content = <h1>Home</h1>;
+        case 'decks':
+            Content = <Decks />;
             break;
         case 'signup':
             Content = <Signup />;

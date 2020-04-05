@@ -21,7 +21,7 @@ const Signup: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     const [passwordConf, setPasswordConf] = useState('');
 
     if (appCtx.user) {
-        props.history.push('/p/home');
+        props.history.push('/p/decks');
     }
 
     const signupLabels = [

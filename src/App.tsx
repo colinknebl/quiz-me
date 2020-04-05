@@ -76,7 +76,7 @@ class App extends React.Component<unknown, IAppState> {
                                     }}
                                     exact={true}
                                 />
-                                <Route path="/" render={() => <Redirect to="/p/home" />} exact={true} />
+                                <Route path="/" render={() => <Redirect to="/p/decks" />} exact={true} />
                             </IonRouterOutlet>
                         </IonSplitPane>
                     </IonReactRouter>

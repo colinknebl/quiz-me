@@ -18,7 +18,7 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
     const [password, setPassword] = useState('');
 
     if (appCtx.user) {
-        props.history.push('/p/home');
+        props.history.push('/p/decks');
     }
 
     const loginLabels = [
@@ -57,7 +57,7 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                         const user = await User.login(loginLabels[0].value, loginLabels[1].value);
                         console.log('user', user);
                         appCtx.setUser(user);
-                        props.history.push('/p/home');
+                        props.history.push('/p/decks');
                     } catch (error) {
                         setToast({
                             message: error.message ?? 'Unknown error, please try again',
