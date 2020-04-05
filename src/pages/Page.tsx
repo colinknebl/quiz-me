@@ -11,7 +11,6 @@ import './Page.css';
 const Page: React.FC<RouteComponentProps<{ name: string }>> = (props) => {
     let Content: JSX.Element;
     const ctx = React.useContext(AppContext);
-    console.log('app context:', ctx);
 
     switch (props.match.params.name) {
         case 'home':
