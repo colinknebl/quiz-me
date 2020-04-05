@@ -18,6 +18,7 @@ interface ILoginAPIResponse {
             lastName: string;
             decks: [];
         };
+        token: string;
     };
 }
 
@@ -34,27 +35,42 @@ export class User {
         return process.env.REACT_APP_API_URI || '';
     }
 
-    private static get _requestHeaders(): Headers {
+    private static _getRequestHeaders(options: { withAuth: boolean } = { withAuth: true }): Headers {
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
+        if (options.withAuth) {
+            const token = localStorage.getItem('authToken');
+            headers.append('Authorization', `Bearer ${token}`);
+        }
         return headers;
+    }
+
+    public static async lookup(this: typeof User): Promise<User | null> {
+        const req = await fetch(`${this._apiBaseURI}/token-verification`, {
+            headers: this._getRequestHeaders(),
+        });
+        const res: ILoginAPIResponse = await req.json();
+        if (res.code !== 200 || res.error || !res.data.user) {
+            throw new AppError(res.error || 'Verification failure');
+        }
+        const { id, firstName, lastName, email, decks } = res.data.user;
+        return new User(id, firstName, lastName, email, decks);
     }
 
     public static async login(this: typeof User, loginEmail: string, password: string): Promise<User> {
         const req = await fetch(`${this._apiBaseURI}/login`, {
             method: 'POST',
-            headers: this._requestHeaders,
+            headers: this._getRequestHeaders({ withAuth: false }),
             body: JSON.stringify({
                 email: loginEmail,
                 password: password,
             }),
         });
-        console.log('User -> constructor -> req', req);
         const res: ILoginAPIResponse = await req.json();
-        console.log('User -> res', res);
         if (res.code !== 200 || res.error || !res.data.user) {
             throw new AppError(res.error || 'Login failure');
         }
+        localStorage.setItem('authToken', res.data.token);
         const { id, firstName, lastName, email, decks } = res.data.user;
         return new User(id, firstName, lastName, email, decks);
     }
@@ -78,7 +94,7 @@ export class User {
 
         let req = await fetch(`${this._apiBaseURI}/create-user`, {
             method: 'POST',
-            headers: this._requestHeaders,
+            headers: this._getRequestHeaders({ withAuth: false }),
             body: JSON.stringify({
                 firstName: firstName,
                 lastName: lastName,
