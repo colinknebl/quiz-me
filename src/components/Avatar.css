@@ -1,0 +1,22 @@
+ion-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 1px solid white;
+    margin: 5px 10px;
+    height: 40px;
+    width: 40px;
+}
+
+.login-btn {
+    background: none;
+    border: none;
+    margin: 5px 10px;
+    color: white;
+    font-size: 1rem;
+}
+
+.login-btn:hover {
+    text-decoration: underline;
+}

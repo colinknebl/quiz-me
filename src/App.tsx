@@ -24,26 +24,35 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 
+import { AppContext } from './context/App.context';
+import { User } from './models/User';
+
 const App: React.FC = () => {
+    const [user, setUser] = React.useState<User | null>(null);
+    const [selectedPage, setSelectedPage] = useState('');
 
-  const [selectedPage, setSelectedPage] = useState('');
-
-  return (
-    <IonApp>
-      <IonReactRouter>
-        <IonSplitPane contentId="main">
-          <Menu selectedPage={selectedPage} />
-          <IonRouterOutlet id="main">
-            <Route path="/page/:name" render={(props) => {
-              setSelectedPage(props.match.params.name);
-              return <Page {...props} />;
-            }} exact={true} />
-            <Route path="/" render={() => <Redirect to="/page/Inbox" />} exact={true} />
-          </IonRouterOutlet>
-        </IonSplitPane>
-      </IonReactRouter>
-    </IonApp>
-  );
+    return (
+        <IonApp>
+            <AppContext.Provider value={{ user, setUser }}>
+                <IonReactRouter>
+                    <IonSplitPane contentId="main">
+                        <Menu selectedPage={selectedPage} />
+                        <IonRouterOutlet id="main">
+                            <Route
+                                path="/p/:name"
+                                render={(props) => {
+                                    setSelectedPage(props.match.params.name);
+                                    return <Page {...props} />;
+                                }}
+                                exact={true}
+                            />
+                            <Route path="/" render={() => <Redirect to="/p/home" />} exact={true} />
+                        </IonRouterOutlet>
+                    </IonSplitPane>
+                </IonReactRouter>
+            </AppContext.Provider>
+        </IonApp>
+    );
 };
 
 export default App;
