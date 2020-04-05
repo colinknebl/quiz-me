@@ -1,0 +1,12 @@
+.deck-card {
+    border: 2px solid white;
+    background: none;
+    color: white;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.deck-card-title {
+    margin: 0;
+}
