@@ -14,8 +14,6 @@ function Decks(props: RouteComponentProps) {
         props.history.push('/p/login');
     }
 
-    console.log(ctx.user);
-
     return (
         <div className="decks">
             <div className="deck-grid">
