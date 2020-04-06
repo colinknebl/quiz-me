@@ -1,3 +1,4 @@
+import { App } from './App';
 import { AppError } from '../utils/AppError';
 import { Deck, IDeck } from './Deck';
 
@@ -37,23 +38,9 @@ export class User {
         }
     }
 
-    private static get _apiBaseURI(): string {
-        return process.env.REACT_APP_API_URI || '';
-    }
-
-    private static _getRequestHeaders(options: { withAuth: boolean } = { withAuth: true }): Headers {
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        if (options.withAuth) {
-            const token = localStorage.getItem('authToken');
-            headers.append('Authorization', `Bearer ${token}`);
-        }
-        return headers;
-    }
-
     public static async lookup(this: typeof User): Promise<User | null> {
-        const req = await fetch(`${this._apiBaseURI}/token-verification`, {
-            headers: this._getRequestHeaders(),
+        const req = await fetch(`${App.APIBaseURL}/token-verification`, {
+            headers: App.getRequestHeaders(),
         });
         const res: ILoginAPIResponse = await req.json();
         if (res.code !== 200 || res.error || !res.data.user) {
@@ -64,9 +51,9 @@ export class User {
     }
 
     public static async login(this: typeof User, loginEmail: string, password: string): Promise<User> {
-        const req = await fetch(`${this._apiBaseURI}/login`, {
+        const req = await fetch(`${App.APIBaseURL}/login`, {
             method: 'POST',
-            headers: this._getRequestHeaders({ withAuth: false }),
+            headers: App.getRequestHeaders({ withAuth: false }),
             body: JSON.stringify({
                 email: loginEmail,
                 password: password,
@@ -98,9 +85,9 @@ export class User {
     ): Promise<string | undefined> {
         this._verifyPasswordsMatch(password, passwordConf);
 
-        let req = await fetch(`${this._apiBaseURI}/create-user`, {
+        let req = await fetch(`${App.APIBaseURL}/create-user`, {
             method: 'POST',
-            headers: this._getRequestHeaders({ withAuth: false }),
+            headers: App.getRequestHeaders({ withAuth: false }),
             body: JSON.stringify({
                 firstName: firstName,
                 lastName: lastName,
@@ -118,5 +105,9 @@ export class User {
 
     public get initials(): string {
         return this.firstName.charAt(0).toUpperCase() + this.lastName.charAt(0).toUpperCase();
+    }
+
+    public addDeck(deck: Deck): void {
+        this.decks.push(deck);
     }
 }
