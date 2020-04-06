@@ -66,7 +66,6 @@ class App extends React.Component<unknown, IAppState> {
                                 <Route
                                     path="/p/:name"
                                     render={(props) => {
-                                        console.log('App -> render -> props', props);
                                         if (props.match.params.name !== this.state.selectedPage) {
                                             this.setState({
                                                 selectedPage: props.match.params.name,
