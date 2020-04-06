@@ -1,7 +1,10 @@
 import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle } from '@ionic/react';
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { mailOutline, mailSharp } from 'ionicons/icons';
+import { mailOutline, mailSharp, createOutline } from 'ionicons/icons';
+
+import { User } from '../models/User';
+import { AppContext } from '../context/App.context';
 import './Menu.css';
 
 interface MenuProps extends RouteComponentProps {
@@ -15,40 +18,66 @@ interface AppPage {
     title: string;
 }
 
-const appPages: AppPage[] = [
-    {
-        title: 'Decks',
-        url: '/p/decks',
-        iosIcon: mailOutline,
-        mdIcon: mailSharp,
-    },
-];
+class Menu extends React.Component<MenuProps> {
+    public static links = {
+        createDeck: {
+            title: 'Create Deck',
+            url: '/p/create-deck',
+            iosIcon: createOutline,
+            mdIcon: createOutline,
+        },
+    };
+    public static getLinks(user: User | null): AppPage[] {
+        const links: AppPage[] = [
+            {
+                title: 'Decks',
+                url: '/p/decks',
+                iosIcon: mailOutline,
+                mdIcon: mailSharp,
+            },
+        ];
 
-const Menu: React.FunctionComponent<MenuProps> = ({ selectedPage }) => {
-    return (
-        <IonMenu contentId="main" type="overlay">
-            <IonContent>
-                <IonList id="inbox-list">
-                    {appPages.map((appPage, index) => {
-                        return (
-                            <IonMenuToggle key={index} autoHide={false}>
-                                <IonItem
-                                    className={selectedPage === appPage.title ? 'selected' : ''}
-                                    routerLink={appPage.url}
-                                    routerDirection="none"
-                                    lines="none"
-                                    detail={false}
-                                >
-                                    <IonIcon slot="start" icon={appPage.iosIcon} />
-                                    <IonLabel>{appPage.title}</IonLabel>
-                                </IonItem>
-                            </IonMenuToggle>
-                        );
-                    })}
-                </IonList>
-            </IonContent>
-        </IonMenu>
-    );
-};
+        if (user) {
+            links.push(Menu.links.createDeck);
+        }
+
+        return links;
+    }
+
+    constructor(props: MenuProps) {
+        super(props);
+    }
+
+    render() {
+        return (
+            <AppContext.Consumer>
+                {(ctx) => (
+                    <IonMenu contentId="main" type="overlay">
+                        <IonContent>
+                            <IonList id="inbox-list">
+                                {Menu.getLinks(ctx.user).map((link, index) => {
+                                    return (
+                                        <IonMenuToggle key={index} autoHide={false}>
+                                            <IonItem
+                                                className={this.props.selectedPage === link.title ? 'selected' : ''}
+                                                routerLink={link.url}
+                                                routerDirection="none"
+                                                lines="none"
+                                                detail={false}
+                                            >
+                                                <IonIcon slot="start" icon={link.iosIcon} />
+                                                <IonLabel>{link.title}</IonLabel>
+                                            </IonItem>
+                                        </IonMenuToggle>
+                                    );
+                                })}
+                            </IonList>
+                        </IonContent>
+                    </IonMenu>
+                )}
+            </AppContext.Consumer>
+        );
+    }
+}
 
 export default withRouter(Menu);
