@@ -8,7 +8,7 @@ interface IInputItem {
     onChange: any;
 }
 
-export function InptItem({ label, type, value, onChange }: IInputItem) {
+export function InputItem({ label, type, value, onChange }: IInputItem) {
     return (
         <IonItem>
             <IonLabel position="floating">{label}</IonLabel>

@@ -4,7 +4,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import { User } from '../models/User';
 import { AppContext } from '../context/App.context';
-import { InptItem } from './InputItem';
+import { InputItem } from './InputItem';
 import { useToast } from '../hooks/useToast';
 
 // import './Login.css';
@@ -42,7 +42,7 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
         <div className="container">
             <IonList>
                 {loginLabels.map(({ label, key, type, value, onChange }) => (
-                    <InptItem key={key} label={label} type={type} value={value} onChange={onChange} />
+                    <InputItem key={key} label={label} type={type} value={value} onChange={onChange} />
                 ))}
             </IonList>
 
