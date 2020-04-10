@@ -1,12 +1,13 @@
 import React from 'react';
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { RouteComponentProps } from 'react-router';
 
-import Avatar from '../components/Avatar';
+import Header from '../components/Header';
 import { AppContext } from '../context/App.context';
-import Signup from '../components/Signup';
-import Login from '../components/Login';
-import Decks from '../components/Decks';
+import Signup from './Signup';
+import Login from './Login';
+import Decks from './Decks';
+import CreateDeck from './CreateDeck';
 import './Page.css';
 
 const Page: React.FC<RouteComponentProps<{ name: string }>> = (props) => {
@@ -23,21 +24,16 @@ const Page: React.FC<RouteComponentProps<{ name: string }>> = (props) => {
         case 'login':
             Content = <Login />;
             break;
+        case 'create-deck':
+            Content = <CreateDeck />;
+            break;
         default:
             Content = <h1>Page Not Found</h1>;
     }
 
     return (
         <IonPage>
-            <IonHeader>
-                <IonToolbar>
-                    <IonButtons slot="start">
-                        <IonMenuButton />
-                    </IonButtons>
-                    <IonTitle>QuizMe / {props.match.params.name}</IonTitle>
-                    {props.match.params.name !== 'login' && <Avatar {...props} />}
-                </IonToolbar>
-            </IonHeader>
+            <Header />
 
             <IonContent>
                 <IonHeader collapse="condense">

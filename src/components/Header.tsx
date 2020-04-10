@@ -5,7 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import Avatar from '../components/Avatar';
 import { AppContext } from '../context/App.context';
 
-const Header: React.FC<RouteComponentProps<{ name: string }>> = (props) => {
+const Header: React.FC<RouteComponentProps> = (props) => {
     const ctx = React.useContext(AppContext);
 
     return (
@@ -14,7 +14,7 @@ const Header: React.FC<RouteComponentProps<{ name: string }>> = (props) => {
                 <IonButtons slot="start">
                     <IonMenuButton />
                 </IonButtons>
-                <IonTitle>QuizMe / {props.match.params.name}</IonTitle>
+                <IonTitle>QuizMe</IonTitle>
                 {ctx.user && <Avatar {...props} />}
             </IonToolbar>
         </IonHeader>

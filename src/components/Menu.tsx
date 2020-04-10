@@ -1,5 +1,5 @@
-import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle } from '@ionic/react';
 import React from 'react';
+import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle } from '@ionic/react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { mailOutline, mailSharp, createOutline } from 'ionicons/icons';
 
@@ -42,10 +42,6 @@ class Menu extends React.Component<MenuProps> {
         }
 
         return links;
-    }
-
-    constructor(props: MenuProps) {
-        super(props);
     }
 
     render() {

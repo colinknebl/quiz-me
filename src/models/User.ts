@@ -110,4 +110,8 @@ export class User {
     public addDeck(deck: Deck): void {
         this.decks.push(deck);
     }
+
+    public getDeck(deckId: string): Deck {
+        return this.decks.find((deck) => deck.id === deckId) as any;
+    }
 }

@@ -12,7 +12,12 @@ export function InputItem({ label, type, value, onChange }: IInputItem) {
     return (
         <IonItem>
             <IonLabel position="floating">{label}</IonLabel>
-            <IonInput type={type} value={value} onIonChange={(e) => onChange(e.detail.value)}></IonInput>
+            <IonInput
+                autocomplete="off"
+                type={type}
+                value={value}
+                onIonChange={(e) => onChange(e.detail.value)}
+            ></IonInput>
         </IonItem>
     );
 }

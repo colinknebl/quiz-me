@@ -1,0 +1,63 @@
+.quiz-modal {
+    color: white;
+}
+
+.close-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card-container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    --flip: rotate3d(0, 1, 0, 180deg);
+    --default: rotate(0, 1, 0, 0deg);
+    height: 100%;
+    width: 100%;
+    position: relative;
+    max-height: 500px;
+    max-width: 500px;
+}
+
+.card-side {
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+    position: absolute;
+    background: #333;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transform-origin: center;
+    backface-visibility: hidden;
+    transition: transform 400ms;
+}
+
+.sideA {
+    transform: var(--default);
+}
+
+.card[flipped] .sideA {
+    transform: var(--flip);
+}
+
+.sideB {
+    transform: var(--flip);
+}
+
+.card[flipped] .sideB {
+    transform: var(--default);
+}
+
+.nav-button-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* grid-gap: ; */
+}
