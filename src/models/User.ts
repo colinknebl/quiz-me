@@ -39,9 +39,11 @@ export class User {
     }
 
     public static async lookup(this: typeof User): Promise<User | null> {
-        const req = await fetch(`${App.APIBaseURL}/token-verification`, {
-            headers: App.getRequestHeaders(),
+        const options = App.getRequestOptions({
+            withAuth: true,
+            method: 'GET',
         });
+        const req = await fetch(`${App.APIBaseURL}/token-verification`, options);
         const res: ILoginAPIResponse = await req.json();
         if (res.code !== 200 || res.error || !res.data.user) {
             throw new AppError(res.error || 'Verification failure');
@@ -51,14 +53,15 @@ export class User {
     }
 
     public static async login(this: typeof User, loginEmail: string, password: string): Promise<User> {
-        const req = await fetch(`${App.APIBaseURL}/login`, {
+        const options = App.getRequestOptions({
+            withAuth: false,
             method: 'POST',
-            headers: App.getRequestHeaders({ withAuth: false }),
-            body: JSON.stringify({
+            body: {
                 email: loginEmail,
                 password: password,
-            }),
+            },
         });
+        const req = await fetch(`${App.APIBaseURL}/login`, options);
         const res: ILoginAPIResponse = await req.json();
         if (res.code !== 200 || res.error || !res.data.user) {
             throw new AppError(res.error || 'Login failure');
@@ -84,18 +87,18 @@ export class User {
         passwordConf: string
     ): Promise<string | undefined> {
         this._verifyPasswordsMatch(password, passwordConf);
-
-        let req = await fetch(`${App.APIBaseURL}/create-user`, {
+        const options = App.getRequestOptions({
             method: 'POST',
-            headers: App.getRequestHeaders({ withAuth: false }),
-            body: JSON.stringify({
+            withAuth: false,
+            body: {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
                 password: password,
                 decks: [],
-            }),
+            },
         });
+        let req = await fetch(`${App.APIBaseURL}/create-user`, options);
         let res: ICreateUserAPIResponse = await req.json();
         if (res.code !== 200 && res.error) {
             throw new AppError(res.error);

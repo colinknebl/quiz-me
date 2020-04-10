@@ -35,13 +35,13 @@ export class Deck {
     }
 
     public static async create(title: string): Promise<Deck> {
-        const req = await fetch(`${App.APIBaseURL}/create-deck`, {
+        const options = App.getRequestOptions({
+            withAuth: true,
             method: 'POST',
-            headers: App.getRequestHeaders({ withAuth: true }),
-            body: JSON.stringify({
-                title,
-            }),
+            credentials: 'include',
+            body: { title },
         });
+        const req = await fetch(`${App.APIBaseURL}/create-deck`, options);
         const res: ICreateDeckAPIResponse = await req.json();
         if (res.code !== 200 || res.error || !res.data?.deckId) {
             throw new AppError(res.error || 'Verification failure');
@@ -50,9 +50,13 @@ export class Deck {
     }
 
     public async toggleCard(cardId: string): Promise<boolean> {
-        const req = await fetch(`${App.APIBaseURL}/deck/${this.id}/card/${cardId}/toggleMarked`, {
-            headers: App.getRequestHeaders({ withAuth: true }),
+        const options = App.getRequestOptions({
+            withAuth: true,
+            method: 'GET',
+            credentials: 'include',
         });
+
+        const req = await fetch(`${App.APIBaseURL}/deck/${this.id}/card/${cardId}/toggleMarked`, options);
         const res: IToggleCardMarkedAPIResponse = await req.json();
         if (res.code !== 200 || res.error) {
             throw new AppError(res.error || 'Error toggling marked status');
