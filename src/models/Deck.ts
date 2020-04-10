@@ -10,6 +10,14 @@ interface ICreateDeckAPIResponse {
     } | null;
 }
 
+interface IToggleCardMarkedAPIResponse {
+    code: number;
+    error: null | string;
+    data: null | {
+        marked: boolean;
+    };
+}
+
 export interface IDeck {
     id: string;
     title: string;
@@ -22,7 +30,7 @@ export class Deck {
 
     constructor(public id: string, public title: string, public isPublic: boolean, cards: ICard[]) {
         if (cards?.length) {
-            this.cards = cards.map((card) => new Card(card.id, card.sideA, card.sideB, card.marked));
+            this.cards = cards.map((card) => new Card(this, card.id, card.sideA, card.sideB, card.marked));
         }
     }
 
@@ -39,5 +47,16 @@ export class Deck {
             throw new AppError(res.error || 'Verification failure');
         }
         return new Deck(res.data.deckId, title, true, []);
+    }
+
+    public async toggleCard(cardId: string): Promise<boolean> {
+        const req = await fetch(`${App.APIBaseURL}/deck/${this.id}/card/${cardId}/toggleMarked`, {
+            headers: App.getRequestHeaders({ withAuth: true }),
+        });
+        const res: IToggleCardMarkedAPIResponse = await req.json();
+        if (res.code !== 200 || res.error) {
+            throw new AppError(res.error || 'Error toggling marked status');
+        }
+        return res.data!.marked;
     }
 }

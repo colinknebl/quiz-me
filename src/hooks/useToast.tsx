@@ -9,9 +9,11 @@ interface IToastState {
     duration?: number;
 }
 
-export function useToast(
-    initState?: Partial<IToastState>
-): [(nextState: Partial<IToastState>) => void, JSX.Element, IToastState] {
+type SetToastFn = (nextState: Partial<IToastState>) => void;
+type ToastEl = JSX.Element;
+type ToastState = IToastState;
+
+export function useToast(initState?: Partial<IToastState>): [SetToastFn, ToastEl, ToastState] {
     const defaultState: IToastState = {
         isOpen: false,
         message: '',
@@ -21,7 +23,7 @@ export function useToast(
         ...initState,
     };
     const [toast, setToastDefault] = useState<IToastState>(defaultState);
-    const setToast = (nextState: Partial<IToastState>) => {
+    const setToast: SetToastFn = (nextState: Partial<IToastState>) => {
         setToastDefault({
             ...toast,
             isOpen: true,
