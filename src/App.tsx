@@ -2,7 +2,7 @@ import Menu from './components/Menu';
 import React from 'react';
 import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { Redirect, Route } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -69,12 +69,11 @@ class App extends React.Component<unknown, IAppState> {
                         <IonSplitPane contentId="main">
                             <Menu user={this.state.user} />
                             <IonRouterOutlet id="main">
-                                <Route path="/p/login" component={Login} exact />
-                                <Route path="/p/signup" component={Signup} exact />
-                                <Route path="/p/decks" component={Decks} exact />
-                                <Route path="/p/create-deck" component={CreateDeck} exact />
-                                <Route path="/p/deck/:deckId" component={Deck} exact />
-                                <Route path="/" render={() => <Redirect to="/p/decks" />} exact={true} />
+                                <Route path="/login" component={Login} exact />
+                                <Route path="/signup" component={Signup} exact />
+                                <Route path="/create-deck" component={CreateDeck} exact />
+                                <Route path="/deck/:deckId" component={Deck} exact />
+                                <Route path="/" component={Decks} />
                             </IonRouterOutlet>
                         </IonSplitPane>
                     </IonReactRouter>

@@ -9,7 +9,7 @@ function DeckCard({ deck }: { deck: Deck }) {
         <div className="deck-card">
             <h2 className="deck-card-title">{deck.title}</h2>
             <p>{deck.cards.length} Cards</p>
-            <IonButton routerLink={`/p/deck/${deck.id}`}>Open</IonButton>
+            <IonButton routerLink={`/deck/${deck.id}`}>Open</IonButton>
         </div>
     );
 }

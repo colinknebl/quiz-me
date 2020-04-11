@@ -51,7 +51,7 @@ function NoDecks(props: RouteComponentProps) {
             <p>No decks available</p>
             <IonButton
                 onClick={() => {
-                    props.history.push('/p/create-deck');
+                    props.history.push('/create-deck');
                 }}
             >
                 Create Deck

@@ -56,7 +56,7 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                                 ctx.setUser(user);
                                 setEmail('');
                                 setPassword('');
-                                props.history.push('/p/decks');
+                                props.history.push('/');
                             } catch (error) {
                                 setToast({
                                     message: error.message ?? 'Unknown error, please try again',

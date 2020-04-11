@@ -23,19 +23,19 @@ class Menu extends React.Component<IMenuProps> {
     public static links = {
         decks: {
             title: 'Decks',
-            url: '/p/decks',
+            url: '/',
             iosIcon: mailOutline,
             mdIcon: mailSharp,
         },
         createDeck: {
             title: 'Create Deck',
-            url: '/p/create-deck',
+            url: '/create-deck',
             iosIcon: createOutline,
             mdIcon: createOutline,
         },
         logout: {
             title: 'Logout',
-            url: '/p/login',
+            url: '/login',
             iosIcon: logOutOutline,
             mdIcon: logOutOutline,
             onBeforeNavCb: async (ctx: IAppContext) => {
@@ -45,13 +45,13 @@ class Menu extends React.Component<IMenuProps> {
         },
         login: {
             title: 'Login',
-            url: '/p/login',
+            url: '/login',
             iosIcon: logInOutline,
             mdIcon: logInOutline,
         },
         signup: {
             title: 'Signup',
-            url: '/p/signup',
+            url: '/signup',
             iosIcon: personAddOutline,
             mdIcon: personAddOutline,
         },

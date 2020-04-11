@@ -7,6 +7,6 @@ export function useProtectRoute() {
     const ctx = React.useContext(AppContext);
 
     if (!ctx.user && !ctx.verifyingToken) {
-        return <Redirect to="/p/login" />;
+        return <Redirect to="/login" />;
     }
 }

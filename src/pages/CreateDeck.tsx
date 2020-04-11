@@ -34,7 +34,7 @@ function CreateDeck(props: RouteComponentProps) {
                             try {
                                 const deck = await Deck.create(deckTitle);
                                 ctx.user?.addDeck(deck);
-                                props.history.push('/p/decks');
+                                props.history.push('/');
                             } catch (error) {
                                 setToast({
                                     message: error.message ?? 'Unknown error, please try again',

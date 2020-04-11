@@ -14,7 +14,7 @@ function Avatar(props: RouteComponentProps) {
             <button
                 className="login-btn"
                 onClick={() => {
-                    props.history.push('/p/login');
+                    props.history.push('/login');
                 }}
                 slot="end"
             >
