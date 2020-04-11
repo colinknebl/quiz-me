@@ -1,12 +1,7 @@
-import { App } from './App';
+import { App, APIResponse } from './App';
 import { AppError } from '../utils/AppError';
 import { Deck, IDeck } from './Deck';
 
-type APIResponse<Data> = {
-    code: number;
-    error: string | null;
-    data: Data;
-};
 type APIUser = {
     id: string;
     email: string;

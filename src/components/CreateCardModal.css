@@ -1,0 +1,15 @@
+.create-card-modal {
+    height: 100%;
+    text-align: center;
+    display: grid;
+    gap: 10px;
+    grid-template-rows: repeat(3, min-content) 1fr;
+}
+
+.create-card-modal h1 {
+    margin-top: 0px;
+}
+
+.create-card-modal ion-button {
+    align-self: end;
+}

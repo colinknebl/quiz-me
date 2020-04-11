@@ -1,11 +1,12 @@
 import React from 'react';
-import { IonButton, IonModal, IonIcon } from '@ionic/react';
+import { IonModal } from '@ionic/react';
 
 import { Card } from '../../models/Card';
 import { useCardNavigation } from '../../hooks/useCardNavigation';
 import CardContainer from './CardContainer';
 import NavigationButtons from './NavigationButtons';
 import './Modal.css';
+import ModalCloseButton from '../ModalCloseButton';
 
 interface IQuizProps {
     cards: Card[];
@@ -26,12 +27,8 @@ function QuizModal({ cards, isOpen, closeFn }: IQuizProps) {
     };
 
     return (
-        <IonModal isOpen={isOpen} cssClass="quiz-modal">
-            <div className="close-container">
-                <IonButton color="light" onClick={closeFn}>
-                    <IonIcon name="close"></IonIcon>
-                </IonButton>
-            </div>
+        <IonModal isOpen={isOpen} onWillDismiss={closeFn} cssClass="quiz-modal">
+            <ModalCloseButton closeFn={closeFn} />
 
             <CardContainer
                 cards={cards}

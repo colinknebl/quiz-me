@@ -5,3 +5,7 @@
     flex-direction: column;
     justify-content: space-between;
 }
+
+.deck-button-container ion-button {
+    display: block;
+}

@@ -63,4 +63,9 @@ export class Deck {
         }
         return res.data!.marked;
     }
+
+    public addCard(card: Card): number {
+        this.cards.push(card);
+        return this.cards.length;
+    }
 }

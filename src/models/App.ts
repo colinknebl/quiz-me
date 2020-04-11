@@ -1,5 +1,11 @@
 import { User } from './User';
 
+export type APIResponse<Data> = {
+    code: number;
+    error: string | null;
+    data: Data;
+};
+
 type MethodValues = 'POST' | 'GET';
 
 interface IRequestOptions {
