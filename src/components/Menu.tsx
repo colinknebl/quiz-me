@@ -1,14 +1,14 @@
 import React from 'react';
-import { IonContent, IonIcon, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle } from '@ionic/react';
+import { IonContent, IonIcon, IonLabel, IonList, IonMenu, IonMenuToggle, IonButton } from '@ionic/react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { mailOutline, mailSharp, createOutline } from 'ionicons/icons';
+import { mailOutline, mailSharp, createOutline, logOutOutline, logInOutline, personAddOutline } from 'ionicons/icons';
 
+import { AppContext, IAppContext } from '../context/App.context';
 import { User } from '../models/User';
-import { AppContext } from '../context/App.context';
 import './Menu.css';
 
-interface MenuProps extends RouteComponentProps {
-    selectedPage: string;
+interface IMenuProps extends RouteComponentProps {
+    user: User | null;
 }
 
 interface AppPage {
@@ -16,29 +16,56 @@ interface AppPage {
     iosIcon: string;
     mdIcon: string;
     title: string;
+    onBeforeNavCb?(ctx: IAppContext): void;
 }
 
-class Menu extends React.Component<MenuProps> {
+class Menu extends React.Component<IMenuProps> {
     public static links = {
+        decks: {
+            title: 'Decks',
+            url: '/p/decks',
+            iosIcon: mailOutline,
+            mdIcon: mailSharp,
+        },
         createDeck: {
             title: 'Create Deck',
             url: '/p/create-deck',
             iosIcon: createOutline,
             mdIcon: createOutline,
         },
+        logout: {
+            title: 'Logout',
+            url: '/p/login',
+            iosIcon: logOutOutline,
+            mdIcon: logOutOutline,
+            onBeforeNavCb: async (ctx: IAppContext) => {
+                await ctx.user!.logout();
+                ctx.setUser(null);
+            },
+        },
+        login: {
+            title: 'Login',
+            url: '/p/login',
+            iosIcon: logInOutline,
+            mdIcon: logInOutline,
+        },
+        signup: {
+            title: 'Signup',
+            url: '/p/signup',
+            iosIcon: personAddOutline,
+            mdIcon: personAddOutline,
+        },
     };
     public static getLinks(user: User | null): AppPage[] {
-        const links: AppPage[] = [
-            {
-                title: 'Decks',
-                url: '/p/decks',
-                iosIcon: mailOutline,
-                mdIcon: mailSharp,
-            },
-        ];
+        const links: AppPage[] = [];
 
         if (user) {
+            links.push(Menu.links.decks);
             links.push(Menu.links.createDeck);
+            links.push(Menu.links.logout);
+        } else {
+            links.push(Menu.links.login);
+            links.push(Menu.links.signup);
         }
 
         return links;
@@ -51,19 +78,20 @@ class Menu extends React.Component<MenuProps> {
                     <IonMenu contentId="main" type="overlay">
                         <IonContent>
                             <IonList id="inbox-list">
-                                {Menu.getLinks(ctx.user).map((link, index) => {
+                                {Menu.getLinks(this.props.user).map((link, index) => {
                                     return (
                                         <IonMenuToggle key={index} autoHide={false}>
-                                            <IonItem
-                                                className={this.props.selectedPage === link.title ? 'selected' : ''}
-                                                routerLink={link.url}
-                                                routerDirection="none"
-                                                lines="none"
-                                                detail={false}
+                                            <IonButton
+                                                className="nav-button"
+                                                fill="clear"
+                                                onClick={() => {
+                                                    link.onBeforeNavCb && link.onBeforeNavCb(ctx);
+                                                    this.props.history.push(link.url);
+                                                }}
                                             >
                                                 <IonIcon slot="start" icon={link.iosIcon} />
                                                 <IonLabel>{link.title}</IonLabel>
-                                            </IonItem>
+                                            </IonButton>
                                         </IonMenuToggle>
                                     );
                                 })}

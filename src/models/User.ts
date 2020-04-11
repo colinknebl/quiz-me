@@ -2,29 +2,34 @@ import { App } from './App';
 import { AppError } from '../utils/AppError';
 import { Deck, IDeck } from './Deck';
 
-interface ICreateUserAPIResponse {
+type APIResponse<Data> = {
     code: number;
     error: string | null;
-    data: null | { userId: string };
-}
+    data: Data;
+};
+type APIUser = {
+    id: string;
+    email: string;
+    createdDate: string;
+    firstName: string;
+    lastName: string;
+    decks: IDeck[];
+};
+
+type CreateUserAPIResponse = APIResponse<{ userId: string }>;
+type RefreshTokenResponse = APIResponse<{ accessToken: string; user: APIUser }>;
 
 interface ILoginAPIResponse {
     code: number;
     error: string | null;
     data: {
-        user: {
-            id: string;
-            email: string;
-            createdDate: string;
-            firstName: string;
-            lastName: string;
-            decks: IDeck[];
-        };
-        token: string;
+        user: APIUser;
+        accessToken: string;
     };
 }
 
 export class User {
+    public static accessToken: string | null = null;
     public decks: Deck[] = [];
     constructor(
         public id: string,
@@ -38,21 +43,32 @@ export class User {
         }
     }
 
-    public static async lookup(this: typeof User): Promise<User | null> {
-        const options = App.getRequestOptions({
-            withAuth: true,
-            method: 'GET',
-        });
-        const req = await fetch(`${App.APIBaseURL}/token-verification`, options);
-        const res: ILoginAPIResponse = await req.json();
-        if (res.code !== 200 || res.error || !res.data.user) {
-            throw new AppError(res.error || 'Verification failure');
-        }
-        const { id, firstName, lastName, email, decks } = res.data.user;
+    private static _initUser(user: APIUser): User {
+        const { id, firstName, lastName, email, decks } = user;
         return new User(id, firstName, lastName, email, decks);
     }
 
-    public static async login(this: typeof User, loginEmail: string, password: string): Promise<User> {
+    public static async refreshToken(): Promise<User | null> {
+        const options = App.getRequestOptions({
+            withAuth: false,
+            withCredentials: true,
+            method: 'GET',
+        });
+        const req = await fetch(`${App.APIBaseURL}/refresh-token?withUser=true`, {
+            ...options,
+            credentials: 'include',
+        });
+        const res: RefreshTokenResponse = await req.json();
+
+        if (res.code !== 200 || res.error || !res.data.accessToken) {
+            return null;
+        }
+
+        User.accessToken = res.data.accessToken;
+        return User._initUser(res.data.user);
+    }
+
+    public static async login(loginEmail: string, password: string): Promise<User> {
         const options = App.getRequestOptions({
             withAuth: false,
             method: 'POST',
@@ -66,12 +82,11 @@ export class User {
         if (res.code !== 200 || res.error || !res.data.user) {
             throw new AppError(res.error || 'Login failure');
         }
-        localStorage.setItem('authToken', res.data.token);
-        const { id, firstName, lastName, email, decks } = res.data.user;
-        return new User(id, firstName, lastName, email, decks);
+        User.accessToken = res.data.accessToken;
+        return User._initUser(res.data.user);
     }
 
-    private static _verifyPasswordsMatch(this: typeof User, password: string, passwordConf: string): boolean {
+    private static _verifyPasswordsMatch(password: string, passwordConf: string): boolean {
         if (password !== passwordConf) {
             throw new AppError('Passwords do not match!');
         }
@@ -99,7 +114,7 @@ export class User {
             },
         });
         let req = await fetch(`${App.APIBaseURL}/create-user`, options);
-        let res: ICreateUserAPIResponse = await req.json();
+        let res: CreateUserAPIResponse = await req.json();
         if (res.code !== 200 && res.error) {
             throw new AppError(res.error);
         }
@@ -116,5 +131,15 @@ export class User {
 
     public getDeck(deckId: string): Deck {
         return this.decks.find((deck) => deck.id === deckId) as any;
+    }
+
+    public async logout(): Promise<void> {
+        const options = App.getRequestOptions({
+            method: 'GET',
+            withCredentials: true,
+            withAuth: false,
+        });
+        await fetch(`${App.APIBaseURL}/logout`, options);
+        User.accessToken = null;
     }
 }

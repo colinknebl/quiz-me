@@ -33,29 +33,31 @@ import Deck from './pages/Deck';
 
 interface IAppState {
     user: User | null;
-    selectedPage: string;
+    verifyingToken: boolean;
 }
 
 class App extends React.Component<unknown, IAppState> {
     state: IAppState = {
         user: null,
-        selectedPage: '',
+        verifyingToken: true,
     };
 
     private get _appProviderValue() {
         return {
             user: this.state.user,
-            setUser: (user: User) => {
+            setUser: (user: User | null) => {
                 this.setState({ user });
             },
+            verifyingToken: this.state.verifyingToken,
         };
     }
 
-    componentDidMount() {
-        User.lookup().then((user) => {
-            if (user) {
-                this.setState({ user });
-            }
+    async componentDidMount() {
+        User.refreshToken().then((user) => {
+            this.setState({
+                user,
+                verifyingToken: false,
+            });
         });
     }
 
@@ -65,7 +67,7 @@ class App extends React.Component<unknown, IAppState> {
                 <AppContext.Provider value={this._appProviderValue}>
                     <IonReactRouter>
                         <IonSplitPane contentId="main">
-                            <Menu selectedPage={this.state.selectedPage} />
+                            <Menu user={this.state.user} />
                             <IonRouterOutlet id="main">
                                 <Route path="/p/login" component={Login} exact />
                                 <Route path="/p/signup" component={Signup} exact />

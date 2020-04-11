@@ -38,7 +38,7 @@ export class Deck {
         const options = App.getRequestOptions({
             withAuth: true,
             method: 'POST',
-            credentials: 'include',
+            withCredentials: true,
             body: { title },
         });
         const req = await fetch(`${App.APIBaseURL}/create-deck`, options);
@@ -53,7 +53,7 @@ export class Deck {
         const options = App.getRequestOptions({
             withAuth: true,
             method: 'GET',
-            credentials: 'include',
+            withCredentials: true,
         });
 
         const req = await fetch(`${App.APIBaseURL}/deck/${this.id}/card/${cardId}/toggleMarked`, options);

@@ -5,9 +5,12 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { AppContext } from '../context/App.context';
 import DeckCard from '../components/DeckCard';
 import Header from '../components/Header';
+import { useProtectRoute } from '../hooks/useProtectedRoute';
 import './Decks.css';
 
 function Decks(props: RouteComponentProps) {
+    useProtectRoute();
+
     const ctx = useContext(AppContext);
 
     return (

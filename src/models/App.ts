@@ -1,14 +1,19 @@
+import { User } from './User';
+
+type MethodValues = 'POST' | 'GET';
+
 interface IRequestOptions {
     withAuth: boolean;
-    method: 'POST' | 'GET';
-    credentials?: 'include';
+    method: MethodValues;
+    withCredentials?: boolean;
     body?: any;
 }
 
 type GetRequestOptionsReturn = {
     headers: Headers;
-    credentials?: 'include';
     body: string;
+    method: MethodValues;
+    credentials?: 'include';
 };
 
 export class App {
@@ -20,15 +25,28 @@ export class App {
         const headers = new Headers({
             'Content-Type': 'application/json',
         });
-        if (options.withAuth) {
-            const token = localStorage.getItem('authToken');
-            headers.append('Authorization', `Bearer ${token}`);
+
+        if (options.withAuth && User.accessToken) {
+            headers.append('Authorization', `Bearer ${User.accessToken}`);
         }
 
-        return {
+        const responseOptions: Partial<GetRequestOptionsReturn> = {
             headers,
-            credentials: options.credentials ? 'include' : undefined,
-            body: options.body ? JSON.stringify(options.body) : undefined,
+            method: options.method,
         };
+
+        if (options.method === 'POST') {
+            responseOptions.body = JSON.stringify(options.body);
+        }
+
+        if (options.withCredentials) {
+            responseOptions.credentials = 'include';
+        }
+
+        return responseOptions;
+    }
+
+    public static async logout(this: typeof App) {
+        await fetch(`${this.APIBaseURL}/logout`);
     }
 }

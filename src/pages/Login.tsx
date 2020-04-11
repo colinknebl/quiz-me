@@ -8,10 +8,8 @@ import { AppContext } from '../context/App.context';
 import { InputItem } from '../components/InputItem';
 import { useToast } from '../hooks/useToast';
 
-// import './Login.css';
-
 const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
-    const appCtx = React.useContext(AppContext);
+    const ctx = React.useContext(AppContext);
 
     const [setToast, toastEl] = useToast();
 
@@ -52,12 +50,10 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                         color="primary"
                         type="submit"
                         onClick={async (e) => {
-                            console.log(e);
                             e.preventDefault();
                             try {
                                 const user = await User.login(loginLabels[0].value, loginLabels[1].value);
-                                console.log('user', user);
-                                appCtx.setUser(user);
+                                ctx.setUser(user);
                                 props.history.push('/p/decks');
                             } catch (error) {
                                 setToast({

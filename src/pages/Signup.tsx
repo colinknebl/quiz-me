@@ -87,7 +87,6 @@ const Signup: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                                     signupLabels[3].value,
                                     signupLabels[4].value
                                 );
-                                console.log('userId', userId);
                                 props.history.push('/p/login');
                             } catch (error) {
                                 showToast({

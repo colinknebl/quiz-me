@@ -7,8 +7,11 @@ import { Deck } from '../models/Deck';
 import { InputItem } from '../components/InputItem';
 import { AppContext } from '../context/App.context';
 import { useToast } from '../hooks/useToast';
+import { useProtectRoute } from '../hooks/useProtectedRoute';
 
 function CreateDeck(props: RouteComponentProps) {
+    useProtectRoute();
+
     const ctx = React.useContext(AppContext);
     const [setToast, toastEl] = useToast();
     const [deckTitle, setDeckTitle] = React.useState('');
@@ -30,7 +33,6 @@ function CreateDeck(props: RouteComponentProps) {
                             e.preventDefault();
                             try {
                                 const deck = await Deck.create(deckTitle);
-                                console.log('CreateDeck -> deck', deck);
                                 ctx.user?.addDeck(deck);
                                 props.history.push('/p/decks');
                             } catch (error) {

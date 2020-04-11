@@ -6,9 +6,12 @@ import Header from '../components/Header';
 import { AppContext } from '../context/App.context';
 import { Deck as DeckModel } from '../models/Deck';
 import QuizModal from '../components/Quiz/Modal';
+import { useProtectRoute } from '../hooks/useProtectedRoute';
 import './Deck.css';
 
 function Deck(props: RouteComponentProps<{ deckId: string }>) {
+    useProtectRoute();
+
     const ctx = React.useContext(AppContext);
     const deck = ctx.user?.getDeck(props.match.params.deckId) as DeckModel;
     const [isModalOpen, setIsModalOpen] = React.useState(false);
