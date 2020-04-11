@@ -10,12 +10,12 @@ import { useToast } from '../hooks/useToast';
 import { useProtectRoute } from '../hooks/useProtectedRoute';
 
 function CreateDeck(props: RouteComponentProps) {
-    useProtectRoute();
-
+    const redirect = useProtectRoute();
     const ctx = React.useContext(AppContext);
     const [setToast, toastEl] = useToast();
     const [deckTitle, setDeckTitle] = React.useState('');
 
+    if (redirect) return redirect;
     return (
         <IonPage>
             <Header />

@@ -11,7 +11,7 @@ import './Deck.css';
 import CreateCardModal from '../components/CreateCardModal';
 
 function Deck(props: RouteComponentProps<{ deckId: string }>) {
-    useProtectRoute();
+    const redirect = useProtectRoute();
 
     const ctx = React.useContext(AppContext);
     const deck = ctx.user?.getDeck(props.match.params.deckId) as DeckModel;
@@ -22,6 +22,7 @@ function Deck(props: RouteComponentProps<{ deckId: string }>) {
         return <p>Loading...</p>;
     }
 
+    if (redirect) return redirect;
     return (
         <IonPage>
             <Header />
