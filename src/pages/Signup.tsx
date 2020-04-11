@@ -80,7 +80,7 @@ const Signup: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                         onClick={async (e) => {
                             e.preventDefault();
                             try {
-                                const userId = await User.create(
+                                await User.create(
                                     signupLabels[0].value,
                                     signupLabels[1].value,
                                     signupLabels[2].value,
