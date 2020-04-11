@@ -49,10 +49,7 @@ export class User {
             withCredentials: true,
             method: 'GET',
         });
-        const req = await fetch(`${App.APIBaseURL}/refresh-token?withUser=true`, {
-            ...options,
-            credentials: 'include',
-        });
+        const req = await fetch(`${App.APIBaseURL}/refresh-token?withUser=true`, options);
         const res: RefreshTokenResponse = await req.json();
 
         if (res.code !== 200 || res.error || !res.data.accessToken) {
@@ -66,6 +63,7 @@ export class User {
     public static async login(loginEmail: string, password: string): Promise<User> {
         const options = App.getRequestOptions({
             withAuth: false,
+            withCredentials: true,
             method: 'POST',
             body: {
                 email: loginEmail,
