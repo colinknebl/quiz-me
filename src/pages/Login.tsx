@@ -54,6 +54,8 @@ const Login: React.FC<RouteComponentProps> = (props: RouteComponentProps) => {
                             try {
                                 const user = await User.login(loginLabels[0].value, loginLabels[1].value);
                                 ctx.setUser(user);
+                                setEmail('');
+                                setPassword('');
                                 props.history.push('/p/decks');
                             } catch (error) {
                                 setToast({
